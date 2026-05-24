@@ -17,4 +17,4 @@ ENV PYTORCH_NO_CUDA_MEMORY_CACHING=1
 ENV OMP_NUM_THREADS=1
 
 EXPOSE 8080
-CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8080}"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
