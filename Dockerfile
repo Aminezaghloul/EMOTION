@@ -1,21 +1,31 @@
-FROM node:20-alpine AS frontend-build
+# FRONTEND BUILD
+FROM node:20 AS frontend-build
 
 WORKDIR /frontend
+
 COPY frontend/package*.json ./
 RUN npm install
-COPY frontend/ .
+
+COPY frontend ./
+
 RUN npm run build
 
-FROM python:3.11-slim
+
+# BACKEND
+FROM python:3.10-slim
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y libsndfile1 ffmpeg && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y libsndfile1 ffmpeg
 
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY . .
+
+# COPY REACT BUILD
 COPY --from=frontend-build /frontend/dist /app/frontend/dist
+
+EXPOSE 8080
 
 CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-8080}"]
