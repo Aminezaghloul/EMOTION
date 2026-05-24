@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 import shutil
 import os
+
 from predict import predict
 
 app = FastAPI(title="Voice Emotion Recognition API")
@@ -41,7 +42,7 @@ async def predict_emotion(file: UploadFile = File(...)):
             os.remove(temp_path)
 
 
-# Serve React frontend
+# SERVE REACT FRONTEND
 if os.path.exists("frontend/dist/assets"):
     app.mount(
         "/assets",
