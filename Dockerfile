@@ -3,20 +3,19 @@ FROM node:20 AS frontend-build
 WORKDIR /frontend
 COPY frontend/package*.json ./
 RUN npm install
-COPY frontend/ ./
+COPY frontend/ .
 RUN npm run build
 
 FROM python:3.11-slim
 
 WORKDIR /app
-
-RUN apt-get update && apt-get install -y libsndfile1 ffmpeg && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y ffmpeg libsndfile1
 
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY . .
-COPY --from=frontend-build /frontend/dist /app/frontend/dist
+COPY --from=frontend-build /frontend/dist ./frontend/dist
 
 EXPOSE 8080
 
