@@ -1,13 +1,10 @@
 FROM node:20 AS frontend-build
 
 WORKDIR /frontend
-
 COPY frontend/package*.json ./
 RUN npm install
-
 COPY frontend/ ./
 RUN npm run build
-
 
 FROM python:3.11-slim
 
@@ -19,7 +16,6 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY . .
-
 COPY --from=frontend-build /frontend/dist /app/frontend/dist
 
 EXPOSE 8080
