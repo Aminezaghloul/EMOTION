@@ -32,7 +32,8 @@ async def predict_emotion(file: UploadFile = File(...)):
         with open(temp_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
-        return predict(temp_path)
+        result = predict(temp_path)
+        return result
 
     except Exception as e:
         return {"error": str(e)}
@@ -41,18 +42,26 @@ async def predict_emotion(file: UploadFile = File(...)):
         if os.path.exists(temp_path):
             os.remove(temp_path)
 
-
+# =========================
 # SERVE REACT FRONTEND
-if os.path.exists("frontend/dist/assets"):
+# =========================
+
+dist_path = "frontend/dist"
+
+# Serve assets folder
+assets_path = os.path.join(dist_path, "assets")
+
+if os.path.exists(assets_path):
     app.mount(
         "/assets",
-        StaticFiles(directory="frontend/dist/assets"),
+        StaticFiles(directory=assets_path),
         name="assets",
     )
 
+# Serve React app
 @app.get("/{full_path:path}")
 async def serve_react_app(full_path: str):
-    index_path = "frontend/dist/index.html"
+    index_path = os.path.join(dist_path, "index.html")
 
     if os.path.exists(index_path):
         return FileResponse(index_path)
