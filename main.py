@@ -19,9 +19,9 @@ app.add_middleware(
 def api_home():
     return {"message": "Voice Emotion Recognition API is running"}
 
-@app.post("/predict")
+@app.post("/api/predict")
 async def predict_emotion(file: UploadFile = File(...)):
-    from predict import predict  # ← lazy load here, not at top
+    from predict import predict
 
     if not file.filename.endswith(".wav"):
         return {"error": "Only WAV files are accepted"}
@@ -57,4 +57,3 @@ async def serve_react_app(full_path: str):
     if os.path.exists(index_path):
         return FileResponse(index_path)
     return {"message": "Frontend build not found. API is running."}
-    
