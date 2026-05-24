@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "build": "cd frontend && npm install && npm run build && cd .. && mkdir -p frontend/dist",
+    "build": "cd frontend && npm install && npm run build",
     "start": "uvicorn main:app --host 0.0.0.0 --port $PORT"
   }
 }
